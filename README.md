@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# Colección Cómics 💥
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+App para llevar tu colección de cómics, con tres secciones:
 
-## Available Scripts
+- **Lo tengo**: tu estantería.
+- **Lo quiero**: tu lista de deseos.
+- **Leídos**: lo que ya has leído, con puntuación de 1 a 5 estrellas.
 
-In the project directory, you can run:
+Cada cómic guarda su portada, título, serie y número, editorial, año, guion, dibujo, formato, ISBN, páginas, precio y notas.
 
-### `npm start`
+## Coste: 0 €
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Sin servidor ni cuentas**: la colección se guarda en el propio navegador (IndexedDB).
+- **Búsqueda mientras escribes**: por título, serie, autor o ISBN en Google Books y Open Library (APIs públicas sin clave). Filtros *Solo cómics y manga* y *Ediciones en español*.
+- **Añadir con un toque**: botones *Lo tengo* / *Lo quiero* en cada resultado (con *Deshacer*), y aviso de los que ya están en tu colección.
+- **Escáner de código de barras**: con la cámara (o una foto) lee el ISBN de la contraportada.
+- **Foto propia**: si no aparece la portada, hazle una foto con el móvil.
+- **Copia de seguridad**: menú `⋯` → exportar/importar un archivo `.json` (también sirve para pasar la colección a otro dispositivo).
+- **Instalable (PWA)** en ordenador y Android: botón *Instalar app* (o menú `⋯`). Funciona sin conexión.
+- **Colección inicial**: `public/coleccion-inicial.json` (y las fotos de `public/covers/`) se cargan la primera vez que se abre la app en un dispositivo nuevo.
+- **Hosting gratis** en GitHub Pages.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Desarrollo
 
-### `npm test`
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # genera dist/
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Hecho con React + Vite + Tailwind CSS.
 
-### `npm run build`
+## Publicar gratis en GitHub Pages
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. En GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+2. Haz merge de los cambios a `main`. El workflow `.github/workflows/deploy.yml` construye y publica la app.
+3. Quedará en `https://<tu-usuario>.github.io/comicpadin/`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+> Los datos viven en cada dispositivo/navegador. Exporta una copia de vez en cuando.
