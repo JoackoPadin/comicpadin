@@ -11,9 +11,9 @@ import { IconBook, IconHeart, IconLibrary, IconMore, IconPlus, IconSearch, IconX
 const TABS = [
   { id: 'owned', label: 'Lo tengo', Icon: IconLibrary, accent: 'bg-pop text-ink', match: (c) => c.status === 'owned',
     empty: ['Tu estantería está vacía', 'Añade el primer cómic de tu colección.'] },
-  { id: 'wanted', label: 'Lo quiero', Icon: IconHeart, accent: 'bg-pop-red text-white', match: (c) => c.status === 'wanted',
+  { id: 'wanted', label: 'Lo quiero', Icon: IconHeart, accent: 'bg-pop text-ink', match: (c) => c.status === 'wanted',
     empty: ['Tu lista de deseos está vacía', 'Apunta aquí los cómics que quieres conseguir.'] },
-  { id: 'read', label: 'Leídos', Icon: IconBook, accent: 'bg-pop-cyan text-ink', match: (c) => c.read,
+  { id: 'read', label: 'Leídos', Icon: IconBook, accent: 'bg-pop text-ink', match: (c) => c.read,
     empty: ['Todavía no has marcado ninguno como leído', 'Abre un cómic y márcalo como leído.'] },
 ];
 
@@ -121,11 +121,11 @@ export default function App() {
       {/* Cabecera */}
       <header className="relative overflow-hidden border-b-4 border-black bg-pop">
         <div className="absolute inset-0 halftone-pop" />
-        <div className="absolute -right-10 -top-16 w-64 h-64 rounded-full bg-pop-red/90 border-4 border-black hidden sm:block" />
+        <div className="absolute inset-y-0 right-0 w-1/2 halftone-fade opacity-25 pointer-events-none" />
         <div className="relative max-w-6xl mx-auto px-4 pt-[max(1.25rem,env(safe-area-inset-top))] pb-5">
           <div className="flex items-center justify-between gap-3">
-            <h1 className="font-display text-5xl sm:text-6xl tracking-wide text-white title-shadow [-webkit-text-stroke:2px_#000] leading-none -rotate-2">
-              ComicPadin
+            <h1 className="font-display text-[2.6rem] min-[420px]:text-5xl sm:text-6xl tracking-wide text-white title-shadow [-webkit-text-stroke:2px_#0b0b0b] leading-none -rotate-2">
+              Colección <span className="text-pop [-webkit-text-stroke:2px_#0b0b0b]">Cómics</span>
             </h1>
             <div className="flex items-center gap-2">
               <button onClick={openNew}
@@ -251,7 +251,7 @@ export default function App() {
           <span className="truncate">✓ {toast.text}</span>
           {toast.undo && (
             <button onClick={() => { toast.undo(); setToast(null); }}
-              className="shrink-0 px-3 py-1.5 rounded-lg font-bold text-pop-violet hover:bg-pop-violet/10">Deshacer</button>
+              className="shrink-0 px-3 py-1.5 rounded-lg font-bold bg-ink text-pop hover:brightness-125">Deshacer</button>
           )}
         </div>
       )}

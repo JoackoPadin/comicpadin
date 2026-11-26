@@ -120,7 +120,7 @@ export default function SearchScreen({ open, onClose, comics, onQuickAdd, onOpen
               )}
             </div>
             <button onClick={() => setScanning(true)} aria-label="Escanear código de barras" title="Escanear código de barras"
-              className="shrink-0 grid place-items-center w-[52px] rounded-xl bg-pop-violet text-white hover:brightness-110 border-2 border-black comic-shadow">
+              className="shrink-0 grid place-items-center w-[52px] rounded-xl bg-pop text-ink hover:brightness-110 border-2 border-black comic-shadow">
               <IconBarcode className="w-6 h-6" />
             </button>
           </div>
@@ -136,11 +136,12 @@ export default function SearchScreen({ open, onClose, comics, onQuickAdd, onOpen
         {q.length < 2 && (
           <div className="py-4 space-y-3">
             <button onClick={() => setScanning(true)}
-              className="w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-pop-violet to-pop-red text-left border-2 border-black comic-shadow hover:-translate-y-0.5 transition-transform">
-              <span className="grid place-items-center w-14 h-14 rounded-xl bg-black/25"><IconBarcode className="w-8 h-8" /></span>
-              <span>
+              className="relative overflow-hidden w-full flex items-center gap-4 p-4 rounded-2xl bg-pop text-ink text-left border-2 border-black comic-shadow hover:-translate-y-0.5 transition-transform">
+              <span className="absolute inset-y-0 right-0 w-1/3 halftone-fade opacity-20 pointer-events-none" />
+              <span className="relative grid place-items-center w-14 h-14 shrink-0 rounded-xl bg-ink text-pop"><IconBarcode className="w-8 h-8" /></span>
+              <span className="relative">
                 <span className="block font-display text-2xl tracking-wide leading-none">Escanear código de barras</span>
-                <span className="block text-sm text-white/85 mt-1">Apunta a la contraportada y se rellena solo</span>
+                <span className="block text-sm text-ink/75 font-medium mt-1">Apunta a la contraportada y se rellena solo</span>
               </span>
             </button>
             <div className="text-sm text-white/50 px-1 space-y-1 pt-2">
@@ -153,7 +154,7 @@ export default function SearchScreen({ open, onClose, comics, onQuickAdd, onOpen
         {q.length >= 2 && state.status === 'loading' && <Skeleton />}
 
         {state.status === 'error' && q.length >= 2 && (
-          <p className="py-8 text-center text-pop-red font-semibold">{state.error}</p>
+          <p className="py-8 text-center text-danger font-semibold">{state.error}</p>
         )}
 
         {state.status === 'done' && q.length >= 2 && state.results.length === 0 && (
@@ -191,13 +192,13 @@ export default function SearchScreen({ open, onClose, comics, onQuickAdd, onOpen
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1.5">
                           {r.format && <span className="text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5 bg-white/10 text-white/70">{r.format}</span>}
-                          {r.language === 'es' && <span className="text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5 bg-pop-cyan/15 text-pop-cyan">Español</span>}
+                          {r.language === 'es' && <span className="text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5 bg-cream/15 text-cream">Español</span>}
                           {r.pages && <span className="text-[10px] font-semibold rounded px-1.5 py-0.5 bg-white/5 text-white/50">{r.pages} págs.</span>}
                         </div>
                       </button>
                       <div className="mt-auto pt-2 flex flex-wrap gap-2">
                         {mine ? (
-                          <span className="inline-flex items-center gap-1.5 text-xs font-bold rounded-lg px-2.5 py-1.5 bg-pop-cyan/15 text-pop-cyan">
+                          <span className="inline-flex items-center gap-1.5 text-xs font-bold rounded-lg px-2.5 py-1.5 bg-cream/15 text-cream">
                             <IconCheck className="w-3.5 h-3.5" strokeWidth={3} /> Ya en tu colección · {STATUS_LABEL[mine.status]}
                           </span>
                         ) : (
@@ -207,7 +208,7 @@ export default function SearchScreen({ open, onClose, comics, onQuickAdd, onOpen
                               <IconLibrary className="w-3.5 h-3.5" /> Lo tengo
                             </button>
                             <button onClick={() => onQuickAdd(r, 'wanted')}
-                              className="inline-flex items-center gap-1.5 text-xs font-bold rounded-lg px-3 py-1.5 bg-pop-red/15 text-pop-red hover:bg-pop-red/25 active:scale-95 transition">
+                              className="inline-flex items-center gap-1.5 text-xs font-bold rounded-lg px-3 py-1.5 border border-pop text-pop hover:bg-pop/10 active:scale-95 transition">
                               <IconHeart className="w-3.5 h-3.5" /> Lo quiero
                             </button>
                           </>

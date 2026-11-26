@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 
+// Portadas generadas en amarillo y negro: [fondo1, fondo2, texto, trama]
 const PALETTES = [
-  ['#ff3b5c', '#ffd60a'], ['#2ee6d6', '#8b5cf6'], ['#ffd60a', '#ff7a00'],
-  ['#8b5cf6', '#ff3b5c'], ['#00b4ff', '#2ee6d6'], ['#ff7a00', '#ff3b5c'],
+  ['#ffd60a', '#f5b700', '#0b0b0b', 'halftone-pop'],
+  ['#1c1c1c', '#050505', '#ffd60a', 'halftone'],
+  ['#f6f1e3', '#e8e0c9', '#0b0b0b', 'halftone-pop'],
+  ['#0b0b0b', '#262626', '#f6f1e3', 'halftone'],
 ];
 const hash = (s) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7);
 
@@ -23,17 +26,17 @@ export default function Cover({ comic, className = '', big = false }) {
     );
   }
 
-  const [a, b] = PALETTES[Math.abs(hash(comic.title || comic.id)) % PALETTES.length];
+  const [a, b, fg, dots] = PALETTES[Math.abs(hash(comic.title || comic.id)) % PALETTES.length];
   return (
     <div className={`relative w-full h-full overflow-hidden flex flex-col justify-end p-3 ${big ? '' : 'pb-8'} ${className}`}
-      style={{ background: `linear-gradient(145deg, ${a}, ${b})` }}>
-      <div className="absolute inset-0 halftone-pop" />
-      <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/20" />
+      style={{ background: `linear-gradient(160deg, ${a}, ${b})`, color: fg }}>
+      <div className={`absolute inset-0 ${dots}`} />
+      <div className="absolute top-0 inset-x-0 h-[18%] speed-lines opacity-[0.12]" style={{ filter: fg === '#0b0b0b' ? 'none' : 'invert(1)' }} />
       <div className="relative">
         {comic.number && (
-          <div className={`font-display text-ink/80 leading-none ${big ? 'text-6xl' : 'text-3xl'}`}>#{comic.number}</div>
+          <div className={`font-display opacity-80 leading-none ${big ? 'text-6xl' : 'text-3xl'}`}>#{comic.number}</div>
         )}
-        <div className={`font-display text-ink leading-[0.95] tracking-wide break-words ${big ? 'text-4xl' : 'text-xl'}`}>
+        <div className={`font-display leading-[0.95] tracking-wide break-words ${big ? 'text-4xl' : 'text-xl'}`}>
           {comic.series || comic.title || 'Sin título'}
         </div>
       </div>

@@ -7,11 +7,11 @@ export default function BackupMenu({ open, onClose, comics, onImport }) {
   const [msg, setMsg] = useState('');
 
   function exportJson() {
-    const blob = new Blob([JSON.stringify({ app: 'comicpadin', version: 1, exportedAt: new Date().toISOString(), comics }, null, 2)],
+    const blob = new Blob([JSON.stringify({ app: 'coleccion-comics', version: 1, exportedAt: new Date().toISOString(), comics }, null, 2)],
       { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `comicpadin-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `coleccion-comics-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     setMsg(`Copia descargada con ${comics.length} cómics.`);
@@ -30,7 +30,7 @@ export default function BackupMenu({ open, onClose, comics, onImport }) {
       onImport(list, replace ? 'replace' : 'merge');
       setMsg(`Importados ${list.length} cómics.`);
     } catch {
-      setMsg('Ese archivo no parece una copia de ComicPadin.');
+      setMsg('Ese archivo no parece una copia de Colección Cómics.');
     }
   }
 
@@ -48,14 +48,14 @@ export default function BackupMenu({ open, onClose, comics, onImport }) {
             <span className="text-xs text-white/50">Descarga un archivo .json</span></span>
         </button>
         <button onClick={() => fileRef.current?.click()}
-          className="flex items-center gap-3 p-4 rounded-xl bg-panel-2 border border-line hover:border-pop-cyan text-left transition-colors">
-          <IconUpload className="w-6 h-6 text-pop-cyan" />
+          className="flex items-center gap-3 p-4 rounded-xl bg-panel-2 border border-line hover:border-pop text-left transition-colors">
+          <IconUpload className="w-6 h-6 text-cream" />
           <span><span className="block font-bold">Importar colección</span>
             <span className="text-xs text-white/50">Desde un archivo .json exportado antes</span></span>
         </button>
         <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={importJson} />
       </div>
-      {msg && <p className="mt-4 text-sm font-semibold text-pop-cyan">{msg}</p>}
+      {msg && <p className="mt-4 text-sm font-semibold text-pop">{msg}</p>}
     </Modal>
   );
 }

@@ -46,7 +46,7 @@ export default function ComicForm({ open, initial, isNew, onSave, onDelete, onCl
         <div className="flex items-center gap-2">
           {!isNew && (
             <button type="button" onClick={() => onDelete(c)}
-              className="p-2.5 rounded-xl text-pop-red hover:bg-pop-red/10" aria-label="Eliminar">
+              className="p-2.5 rounded-xl text-danger hover:bg-danger/10" aria-label="Eliminar">
               <IconTrash />
             </button>
           )}
@@ -120,7 +120,7 @@ export default function ComicForm({ open, initial, isNew, onSave, onDelete, onCl
             <textarea value={c.notes} onChange={set('notes')} rows={3} placeholder="Estado, dónde lo compré, a quién se lo presté…"
               className="w-full rounded-lg bg-ink border border-line px-3 py-2 text-sm placeholder:text-white/25 focus:outline-none focus:border-pop resize-y" />
           </label>
-          {error && <div className="text-sm text-pop-red font-semibold">{error}</div>}
+          {error && <div className="text-sm text-danger font-semibold">{error}</div>}
         </div>
       </form>
     </Modal>

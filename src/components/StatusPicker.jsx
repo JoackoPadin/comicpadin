@@ -2,8 +2,8 @@ import { IconBag, IconCheck, IconHeart, IconLibrary } from './Icons.jsx';
 
 const OPTIONS = [
   { id: 'owned', label: 'Lo tengo', Icon: IconLibrary, on: 'bg-pop text-ink' },
-  { id: 'wanted', label: 'Lo quiero', Icon: IconHeart, on: 'bg-pop-red text-white' },
-  { id: 'none', label: 'Ninguno', Icon: IconBag, on: 'bg-white/80 text-ink' },
+  { id: 'wanted', label: 'Lo quiero', Icon: IconHeart, on: 'bg-pop text-ink' },
+  { id: 'none', label: 'Ninguno', Icon: IconBag, on: 'bg-cream text-ink' },
 ];
 
 export function StatusPicker({ value, onChange }) {
@@ -24,10 +24,10 @@ export function ReadToggle({ value, onChange }) {
   return (
     <button type="button" onClick={() => onChange(!value)} aria-pressed={value}
       className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border-2 transition-all
-        ${value ? 'border-pop-cyan bg-pop-cyan/10' : 'border-line hover:border-white/30'}`}>
+        ${value ? 'border-cream bg-cream/10' : 'border-line hover:border-white/30'}`}>
       <span className="flex items-center gap-2 font-semibold">
         <span className={`grid place-items-center w-6 h-6 rounded-md border-2 transition-all
-          ${value ? 'bg-pop-cyan border-pop-cyan text-ink' : 'border-white/30'}`}>
+          ${value ? 'bg-cream border-cream text-ink' : 'border-white/30'}`}>
           {value && <IconCheck className="w-4 h-4" strokeWidth={3} />}
         </span>
         {value ? '¡Leído!' : 'Aún no lo he leído'}

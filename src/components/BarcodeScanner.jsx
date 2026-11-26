@@ -40,7 +40,7 @@ export default function BarcodeScanner({ onCode, onClose }) {
           <div className="relative w-[78%] max-w-md aspect-[2/1] rounded-2xl shadow-[0_0_0_9999px_rgba(0,0,0,0.55)]">
             <div className="absolute inset-0 rounded-2xl border-4 border-pop" />
             {status === 'scanning' && (
-              <div className="absolute left-3 right-3 top-1/2 h-0.5 bg-pop-red shadow-[0_0_12px_2px_#ff3b5c] animate-pulse" />
+              <div className="absolute left-3 right-3 top-1/2 h-0.5 bg-pop shadow-[0_0_12px_2px_#ffd60a] animate-pulse" />
             )}
           </div>
         </div>

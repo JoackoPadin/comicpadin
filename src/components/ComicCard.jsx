@@ -12,17 +12,16 @@ export default function ComicCard({ comic, onOpen, index = 0 }) {
         transition-all duration-200 group-hover:-translate-y-1 group-hover:rotate-[-1deg] group-hover:shadow-[6px_6px_0_0_#ffd60a]
         group-focus-visible:ring-4 group-focus-visible:ring-pop">
         <Cover comic={comic} />
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
         {comic.read && (
-          <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-pop-cyan text-ink text-[11px] font-bold px-2 py-0.5 shadow">
+          <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-cream text-ink text-[11px] font-bold px-2 py-0.5 shadow border border-black">
             <IconCheck className="w-3 h-3" strokeWidth={3} /> LEÍDO
           </span>
         )}
         {comic.status === 'wanted' && (
-          <span className="absolute top-2 left-2 rounded-full bg-pop-red text-white text-[11px] font-bold px-2 py-0.5 shadow">LO QUIERO</span>
+          <span className="absolute top-2 left-2 rounded-full bg-ink text-pop text-[11px] font-bold px-2 py-0.5 shadow border border-pop">LO QUIERO</span>
         )}
         {comic.rating > 0 && (
-          <span className="absolute bottom-2 left-2 flex items-center gap-0.5 text-pop">
+          <span className="absolute bottom-2 left-2 flex items-center gap-0.5 text-pop bg-ink/85 rounded-full px-1.5 py-1 border border-black">
             {Array.from({ length: comic.rating }, (_, i) => <IconStar key={i} filled className="w-3.5 h-3.5 drop-shadow" />)}
           </span>
         )}

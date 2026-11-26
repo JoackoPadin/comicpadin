@@ -1,4 +1,4 @@
-# ComicPadin 💥
+# Colección Cómics 💥
 
 App para llevar tu colección de cómics, con tres secciones:
 
