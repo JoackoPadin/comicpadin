@@ -26,3 +26,4 @@ export function IconStar({ filled, className = 'w-5 h-5' }) {
     </svg>
   );
 }
+export const IconBarcode = I(<><path d="M3 5v14" /><path d="M7 5v14" /><path d="M11 5v14" /><path d="M14 5v14" /><path d="M18 5v14" /><path d="M21 5v14" /></>);

@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useComics, emptyComic } from './lib/store.js';
 import ComicCard from './components/ComicCard.jsx';
 import ComicForm from './components/ComicForm.jsx';
 import ComicDetail from './components/ComicDetail.jsx';
 import BackupMenu from './components/BackupMenu.jsx';
+import SearchScreen from './components/SearchScreen.jsx';
+import { splitSeries, looksLikeIsbn, cleanIsbn } from './lib/search.js';
 import { IconBook, IconHeart, IconLibrary, IconMore, IconPlus, IconSearch, IconX } from './components/Icons.jsx';
 
 const TABS = [
@@ -35,6 +37,9 @@ export default function App() {
   const [editing, setEditing] = useState(null); // { comic, isNew }
   const [viewingId, setViewingId] = useState(null);
   const [backupOpen, setBackupOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [toast, setToast] = useState(null); // { text, undo }
+  const toastTimer = useRef(null);
 
   const current = TABS.find((t) => t.id === tab);
   const viewing = comics.find((c) => c.id === viewingId) || null;
@@ -68,12 +73,43 @@ export default function App() {
       .sort(SORTS[sort].fn);
   }, [comics, current, query, publisher, sort]);
 
-  const openNew = () => setEditing({
-    isNew: true,
-    comic: emptyComic({ status: tab === 'wanted' ? 'wanted' : 'owned', read: tab === 'read' }),
-  });
+  const defaults = () => ({ status: tab === 'wanted' ? 'wanted' : 'owned', read: tab === 'read' });
+  const openNew = () => setSearchOpen(true);
 
-  function handleSave(c) { save(c); setEditing(null); }
+  // Convierte un resultado del buscador en una ficha
+  const resultToComic = (r, overrides = {}) => {
+    const guess = splitSeries(r.title);
+    return emptyComic({
+      ...defaults(),
+      title: r.title, series: guess.series, number: guess.number,
+      publisher: r.publisher, year: r.year, writer: r.writer, artist: r.artist,
+      isbn: r.isbn, pages: r.pages, format: r.format, cover: r.cover, coverAlt: r.coverAlt,
+      ...overrides,
+    });
+  };
+
+  function showToast(text, undo) {
+    clearTimeout(toastTimer.current);
+    setToast({ text, undo, id: Date.now() });
+    toastTimer.current = setTimeout(() => setToast(null), 4500);
+  }
+
+  function quickAdd(r, status) {
+    const c = resultToComic(r, { status, read: false });
+    save(c);
+    showToast(`Añadido a «${status === 'wanted' ? 'Lo quiero' : 'Lo tengo'}»`, () => remove(c.id));
+  }
+
+  function openManual(q) {
+    const isIsbn = looksLikeIsbn(q);
+    setEditing({ isNew: true, comic: emptyComic({ ...defaults(), title: isIsbn ? '' : q, isbn: isIsbn ? cleanIsbn(q) : '' }) });
+  }
+
+  function handleSave(c) {
+    const isNew = editing?.isNew;
+    save(c); setEditing(null);
+    if (isNew) showToast(`Añadido a «${c.status === 'wanted' ? 'Lo quiero' : c.status === 'owned' ? 'Lo tengo' : 'tu colección'}»`, () => remove(c.id));
+  }
   function handleDelete(c) {
     if (window.confirm(`¿Eliminar "${c.title || c.series}" de tu colección?`)) {
       remove(c.id); setEditing(null); setViewingId(null);
@@ -204,8 +240,21 @@ export default function App() {
 
       <ComicDetail comic={viewing} onClose={() => setViewingId(null)} onUpdate={update}
         onEdit={(c) => { setViewingId(null); setEditing({ comic: c, isNew: false }); }} />
+      <SearchScreen open={searchOpen} onClose={() => setSearchOpen(false)} comics={comics}
+        onQuickAdd={quickAdd} onManual={openManual}
+        onOpenResult={(r) => setEditing({ isNew: true, comic: resultToComic(r) })} />
       <ComicForm open={Boolean(editing)} initial={editing?.comic} isNew={editing?.isNew}
         onSave={handleSave} onDelete={handleDelete} onClose={() => setEditing(null)} />
+      {toast && (
+        <div key={toast.id} role="status"
+          className="fixed z-[70] left-1/2 -translate-x-1/2 bottom-[max(1.5rem,env(safe-area-inset-bottom))] flex items-center gap-4 pl-4 pr-2 py-2 rounded-xl bg-white text-ink font-semibold border-2 border-black comic-shadow animate-sheet-up max-w-[calc(100vw-2rem)]">
+          <span className="truncate">✓ {toast.text}</span>
+          {toast.undo && (
+            <button onClick={() => { toast.undo(); setToast(null); }}
+              className="shrink-0 px-3 py-1.5 rounded-lg font-bold text-pop-violet hover:bg-pop-violet/10">Deshacer</button>
+          )}
+        </div>
+      )}
       <BackupMenu open={backupOpen} onClose={() => setBackupOpen(false)} comics={comics} onImport={importMany} />
     </div>
   );

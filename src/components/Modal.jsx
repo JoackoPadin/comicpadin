@@ -1,15 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
+
+const stack = []; // ventanas abiertas, la última es la de arriba
 import { IconX } from './Icons.jsx';
 
 export default function Modal({ open, onClose, title, children, footer, wide = false }) {
+  const id = useId();
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => e.key === 'Escape' && onClose();
+    stack.push(id);
+    const onKey = (e) => e.key === 'Escape' && stack[stack.length - 1] === id && !document.querySelector('[data-scanner]') && onClose();
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKey);
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
-  }, [open, onClose]);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+      stack.splice(stack.indexOf(id), 1);
+    };
+  }, [open, onClose, id]);
 
   if (!open) return null;
   return (

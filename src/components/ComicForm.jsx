@@ -3,8 +3,7 @@ import Modal from './Modal.jsx';
 import Cover from './Cover.jsx';
 import StarRating from './StarRating.jsx';
 import { StatusPicker, ReadToggle } from './StatusPicker.jsx';
-import { IconCamera, IconSearch, IconTrash } from './Icons.jsx';
-import { searchComics, splitSeries } from '../lib/search.js';
+import { IconCamera, IconTrash } from './Icons.jsx';
 import { fileToCoverDataUrl } from '../lib/image.js';
 import { FORMATS } from '../lib/store.js';
 
@@ -18,60 +17,19 @@ const Field = ({ label, className = '', ...props }) => (
 
 export default function ComicForm({ open, initial, isNew, onSave, onDelete, onClose }) {
   const [c, setC] = useState(initial);
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const fileRef = useRef(null);
-  const abortRef = useRef(null);
 
-  useEffect(() => {
-    setC(initial); setQuery(''); setResults(null); setError('');
-  }, [initial]);
+  useEffect(() => { setC(initial); setError(''); }, [initial]);
 
   if (!open || !c) return null;
   const set = (k) => (e) => setC((p) => ({ ...p, [k]: e?.target ? e.target.value : e }));
-
-  async function runSearch(e) {
-    e?.preventDefault();
-    if (!query.trim()) return;
-    abortRef.current?.abort();
-    const ctrl = new AbortController();
-    abortRef.current = ctrl;
-    setLoading(true); setError(''); setResults(null);
-    try {
-      const r = await searchComics(query, ctrl.signal);
-      if (!ctrl.signal.aborted) setResults(r);
-    } catch (err) {
-      if (err.name !== 'AbortError') setError(err.message);
-    } finally {
-      if (!ctrl.signal.aborted) setLoading(false);
-    }
-  }
-
-  function pick(r) {
-    const guess = splitSeries(r.title);
-    setC((p) => ({
-      ...p,
-      title: r.title || p.title,
-      series: p.series || guess.series,
-      number: p.number || guess.number,
-      publisher: r.publisher || p.publisher,
-      year: r.year || p.year,
-      writer: r.writer || p.writer,
-      artist: r.artist || p.artist,
-      isbn: r.isbn || p.isbn,
-      pages: r.pages || p.pages,
-      cover: r.cover || p.cover,
-    }));
-    setResults(null);
-  }
 
   async function onFile(e) {
     const f = e.target.files?.[0];
     e.target.value = '';
     if (!f) return;
-    try { setC((p) => ({ ...p, cover: '' })); const url = await fileToCoverDataUrl(f); setC((p) => ({ ...p, cover: url })); }
+    try { const url = await fileToCoverDataUrl(f); setC((p) => ({ ...p, cover: url, coverAlt: '' })); }
     catch { setError('No se pudo leer la imagen.'); }
   }
 
@@ -83,7 +41,7 @@ export default function ComicForm({ open, initial, isNew, onSave, onDelete, onCl
   }
 
   return (
-    <Modal open={open} onClose={onClose} wide title={isNew ? 'Nuevo cómic' : 'Editar cómic'}
+    <Modal open={open} onClose={onClose} wide title={isNew ? 'Revisa y guarda' : 'Editar cómic'}
       footer={
         <div className="flex items-center gap-2">
           {!isNew && (
@@ -100,40 +58,6 @@ export default function ComicForm({ open, initial, isNew, onSave, onDelete, onCl
           </button>
         </div>
       }>
-      {/* Buscador */}
-      <form onSubmit={runSearch} className="mb-5">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <IconSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} autoFocus={isNew}
-              placeholder="Busca por título o ISBN para autocompletar…"
-              className="w-full rounded-xl bg-ink border-2 border-line pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:border-pop" />
-          </div>
-          <button type="submit" disabled={loading}
-            className="px-4 rounded-xl font-bold bg-pop-violet text-white hover:brightness-110 disabled:opacity-60">
-            {loading ? '…' : 'Buscar'}
-          </button>
-        </div>
-        {loading && <div className="mt-3 text-sm text-white/50 animate-pulse">Buscando en Google Books y Open Library…</div>}
-        {results && results.length === 0 && (
-          <div className="mt-3 text-sm text-white/50">Sin resultados. Prueba con otro título, o rellénalo a mano.</div>
-        )}
-        {results && results.length > 0 && (
-          <div className="mt-3 flex gap-3 overflow-x-auto no-scrollbar pb-2 -mx-1 px-1 snap-x">
-            {results.map((r, i) => (
-              <button key={i} type="button" onClick={() => pick(r)}
-                className="snap-start shrink-0 w-28 text-left group animate-pop-in" style={{ animationDelay: `${i * 30}ms` }}>
-                <div className="aspect-[2/3] rounded-lg overflow-hidden border-2 border-line group-hover:border-pop transition-colors bg-panel-2">
-                  <Cover comic={{ id: r.title, title: r.title, cover: r.cover }} />
-                </div>
-                <div className="mt-1 text-xs font-semibold line-clamp-2 group-hover:text-pop">{r.title}</div>
-                <div className="text-[10px] text-white/40 truncate">{[r.publisher, r.year].filter(Boolean).join(' · ') || r.source}</div>
-              </button>
-            ))}
-          </div>
-        )}
-      </form>
-
       <form id="comic-form" onSubmit={submit} className="grid sm:grid-cols-[180px_1fr] gap-5">
         {/* Portada */}
         <div className="space-y-2">
@@ -145,7 +69,7 @@ export default function ComicForm({ open, initial, isNew, onSave, onDelete, onCl
             </span>
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={onFile} />
-          <input value={c.cover?.startsWith('data:') ? '' : c.cover} onChange={set('cover')}
+          <input value={c.cover?.startsWith('data:') ? '' : c.cover} onChange={(e) => setC((p) => ({ ...p, cover: e.target.value, coverAlt: '' }))}
             placeholder={c.cover?.startsWith('data:') ? 'Foto propia ✓' : 'o pega URL de portada'}
             className="w-full rounded-lg bg-ink border border-line px-2.5 py-1.5 text-xs placeholder:text-white/30 focus:outline-none focus:border-pop" />
           <button type="button" onClick={() => fileRef.current?.click()}

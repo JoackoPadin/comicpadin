@@ -8,14 +8,17 @@ const hash = (s) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7);
 
 /** Portada del cómic; si no hay imagen (o falla), genera una portada "pop art" con el título. */
 export default function Cover({ comic, className = '', big = false }) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [comic.cover]);
+  // Prueba la portada grande y, si falla, la alternativa (miniatura); si no, genera una
+  const sources = [comic.cover, comic.coverAlt].filter(Boolean);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => setAttempt(0), [comic.cover, comic.coverAlt]);
+  const next = () => setAttempt((a) => a + 1);
 
-  if (comic.cover && !failed) {
+  if (attempt < sources.length) {
     return (
-      <img src={comic.cover} alt={`Portada de ${comic.title}`} loading="lazy" referrerPolicy="no-referrer"
-        onError={() => setFailed(true)}
-        onLoad={(e) => { if (e.currentTarget.naturalWidth <= 1) setFailed(true); }}
+      <img key={sources[attempt]} src={sources[attempt]} alt={`Portada de ${comic.title}`} loading="lazy" referrerPolicy="no-referrer"
+        onError={next}
+        onLoad={(e) => { if (e.currentTarget.naturalWidth <= 1) next(); }}
         className={`w-full h-full object-cover ${className}`} />
     );
   }

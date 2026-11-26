@@ -26,6 +26,7 @@ export function emptyComic(overrides = {}) {
     pages: '',
     price: '',
     cover: '',
+    coverAlt: '',
     status: STATUS.OWNED,
     read: false,
     rating: 0,

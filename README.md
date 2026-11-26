@@ -11,7 +11,9 @@ Cada cómic guarda su portada, título, serie y número, editorial, año, guion,
 ## Coste: 0 €
 
 - **Sin servidor ni cuentas**: la colección se guarda en el propio navegador (IndexedDB).
-- **Autocompletar gratis**: busca por título o ISBN en Google Books y Open Library (APIs públicas sin clave) y rellena los datos y la portada.
+- **Búsqueda mientras escribes**: por título, serie, autor o ISBN en Google Books y Open Library (APIs públicas sin clave). Filtros *Solo cómics y manga* y *Ediciones en español*.
+- **Añadir con un toque**: botones *Lo tengo* / *Lo quiero* en cada resultado (con *Deshacer*), y aviso de los que ya están en tu colección.
+- **Escáner de código de barras**: con la cámara (o una foto) lee el ISBN de la contraportada.
 - **Foto propia**: si no aparece la portada, hazle una foto con el móvil.
 - **Copia de seguridad**: menú `⋯` → exportar/importar un archivo `.json` (también sirve para pasar la colección a otro dispositivo).
 - **Instalable (PWA)**: en el móvil, "Añadir a pantalla de inicio" y se abre como una app, incluso sin conexión.
