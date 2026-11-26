@@ -55,7 +55,18 @@ export function useComics() {
 
   useEffect(() => {
     get(KEY)
-      .then((v) => setComics(Array.isArray(v) ? v.map(normalize) : []))
+      .then(async (v) => {
+        if (Array.isArray(v)) return setComics(v.map(normalize));
+        // Primera vez en este dispositivo: carga la colección incluida con la app
+        try {
+          const res = await fetch(`${import.meta.env.BASE_URL}coleccion-inicial.json`, { cache: 'no-cache' });
+          const data = res.ok ? await res.json() : null;
+          const list = Array.isArray(data) ? data : data?.comics;
+          setComics(Array.isArray(list) ? list.map(normalize) : []);
+        } catch {
+          setComics([]);
+        }
+      })
       .catch((e) => console.error('No se pudo leer la colección', e))
       .finally(() => setReady(true));
     // Pide al navegador que no borre los datos si falta espacio

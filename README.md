@@ -16,7 +16,8 @@ Cada cómic guarda su portada, título, serie y número, editorial, año, guion,
 - **Escáner de código de barras**: con la cámara (o una foto) lee el ISBN de la contraportada.
 - **Foto propia**: si no aparece la portada, hazle una foto con el móvil.
 - **Copia de seguridad**: menú `⋯` → exportar/importar un archivo `.json` (también sirve para pasar la colección a otro dispositivo).
-- **Instalable (PWA)**: en el móvil, "Añadir a pantalla de inicio" y se abre como una app, incluso sin conexión.
+- **Instalable (PWA)** en ordenador y Android: botón *Instalar app* (o menú `⋯`). Funciona sin conexión.
+- **Colección inicial**: `public/coleccion-inicial.json` (y las fotos de `public/covers/`) se cargan la primera vez que se abre la app en un dispositivo nuevo.
 - **Hosting gratis** en GitHub Pages.
 
 ## Desarrollo

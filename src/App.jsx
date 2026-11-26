@@ -6,7 +6,8 @@ import ComicDetail from './components/ComicDetail.jsx';
 import BackupMenu from './components/BackupMenu.jsx';
 import SearchScreen from './components/SearchScreen.jsx';
 import { splitSeries, looksLikeIsbn, cleanIsbn } from './lib/search.js';
-import { IconBook, IconHeart, IconLibrary, IconMore, IconPlus, IconSearch, IconX } from './components/Icons.jsx';
+import { useInstallPrompt } from './lib/install.js';
+import { IconBook, IconDownload, IconHeart, IconLibrary, IconMore, IconPlus, IconSearch, IconX } from './components/Icons.jsx';
 
 const TABS = [
   { id: 'owned', label: 'Lo tengo', Icon: IconLibrary, accent: 'bg-pop text-ink', match: (c) => c.status === 'owned',
@@ -38,6 +39,7 @@ export default function App() {
   const [viewingId, setViewingId] = useState(null);
   const [backupOpen, setBackupOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const installer = useInstallPrompt();
   const [toast, setToast] = useState(null); // { text, undo }
   const toastTimer = useRef(null);
 
@@ -128,11 +130,18 @@ export default function App() {
               Colección <span className="text-pop [-webkit-text-stroke:2px_#0b0b0b]">Cómics</span>
             </h1>
             <div className="flex items-center gap-2">
+              {installer.canInstall && (
+                <button onClick={installer.install}
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-bold bg-white text-ink border-2 border-black comic-shadow hover:-translate-y-0.5 transition-transform"
+                  aria-label="Instalar app">
+                  <IconDownload /> <span className="hidden sm:inline">Instalar app</span>
+                </button>
+              )}
               <button onClick={openNew}
                 className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold bg-ink text-pop border-2 border-black comic-shadow hover:-translate-y-0.5 transition-transform">
                 <IconPlus /> Añadir cómic
               </button>
-              <button onClick={() => setBackupOpen(true)} aria-label="Copia de seguridad"
+              <button onClick={() => setBackupOpen(true)} aria-label="Menú"
                 className="p-2.5 rounded-xl bg-white text-ink border-2 border-black comic-shadow hover:-translate-y-0.5 transition-transform">
                 <IconMore />
               </button>
@@ -255,7 +264,7 @@ export default function App() {
           )}
         </div>
       )}
-      <BackupMenu open={backupOpen} onClose={() => setBackupOpen(false)} comics={comics} onImport={importMany} />
+      <BackupMenu open={backupOpen} onClose={() => setBackupOpen(false)} comics={comics} onImport={importMany} installer={installer} />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import Modal from './Modal.jsx';
 import { IconDownload, IconUpload } from './Icons.jsx';
 
-export default function BackupMenu({ open, onClose, comics, onImport }) {
+export default function BackupMenu({ open, onClose, comics, onImport, installer }) {
   const fileRef = useRef(null);
   const [msg, setMsg] = useState('');
 
@@ -35,7 +35,29 @@ export default function BackupMenu({ open, onClose, comics, onImport }) {
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Copia de seguridad">
+    <Modal open={open} onClose={onClose} title="Menú">
+      {/* Instalar */}
+      <section className="mb-6">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Instalar la app</h3>
+        {installer?.installed ? (
+          <p className="text-sm text-cream">✓ Ya estás usando la app instalada.</p>
+        ) : installer?.canInstall ? (
+          <button onClick={installer.install}
+            className="w-full flex items-center gap-3 p-4 rounded-xl bg-pop text-ink border-2 border-black comic-shadow text-left">
+            <IconDownload className="w-6 h-6" />
+            <span><span className="block font-bold">Instalar Colección Cómics</span>
+              <span className="text-xs text-ink/70">Con icono propio, en su ventana y sin conexión</span></span>
+          </button>
+        ) : (
+          <div className="text-sm text-white/60 space-y-1.5 rounded-xl bg-panel-2 border border-line p-4">
+            <p><b className="text-white">Android (Chrome):</b> menú <b className="text-white">⋮</b> → <b className="text-white">Instalar app</b> (o «Añadir a pantalla de inicio»).</p>
+            <p><b className="text-white">Ordenador (Chrome/Edge):</b> icono de instalar <b className="text-white">⊕</b> a la derecha de la barra de direcciones.</p>
+            <p><b className="text-white">iPhone (Safari):</b> Compartir → «Añadir a pantalla de inicio».</p>
+          </div>
+        )}
+      </section>
+
+      <h3 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Copia de seguridad</h3>
       <p className="text-sm text-white/60 mb-4">
         Tu colección se guarda <strong className="text-white">solo en este dispositivo</strong>, sin coste ni cuentas.
         Descarga una copia de vez en cuando y úsala para pasar tus cómics a otro móvil u ordenador.
